@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "483951486040",
+    "project_id": "bus-it-online",
+    "storage_bucket": "bus-it-online.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:483951486040:android:efbc8b2061dbaa8865162d",
+        "android_client_info": {
+          "package_name": "com.verynice.bus_it"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "483951486040-sj0ukaskomj20tg51ll7heviktmi8gvv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.verynice.bus_it",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "483951486040-j3epn8qunfkf7oo76s4gk2i40pt45dvd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOUiXxuzzjVVIK_A0IgtjEN7DTtTUH4ws"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "483951486040-j3epn8qunfkf7oo76s4gk2i40pt45dvd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
