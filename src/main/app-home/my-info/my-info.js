@@ -238,7 +238,7 @@ export default class MyInfo extends Component {
                   ) {
                     this.props.openSnack('Saving');
                     await _database
-                      .ref('doctors/' + _auth.currentUser.uid)
+                      .ref('customer/' + _auth.currentUser.uid)
                       .once('value', async (x) => {
                         this.props.closeSnack();
                         await x.child('userName').ref.set(this.state.userName);

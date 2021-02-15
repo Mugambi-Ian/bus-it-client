@@ -14,12 +14,12 @@ export function dateToday() {
   var yyyy = today.getFullYear();
   return dd + '.' + mm + '.' + yyyy;
 }
-function generateUID() {
+export function generateUID() {
   return (
     ('000000' + (Math.random() * 46656).toString(36)).slice(-6) + ''
   ).toUpperCase();
 }
-export function idDate() {
+export function idDate(x) {
   var today = new Date();
   var dd = String(today.getDate()).padStart(2, '0');
   var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -31,21 +31,15 @@ export function idDate() {
     today.getSeconds() > 9 ? today.getSeconds() : '0' + today.getSeconds();
   const dT = today.getHours() < 12 ? '-am' : '-pm';
   return (
-    yyyy +
-    '-' +
-    mm +
-    '-' +
-    dd +
-    '/' +
-    hr +
-    '-' +
-    min +
-    '-' +
-    sec +
-    dT +
-    '_' +
-    generateUID()
+    yyyy + '-' + mm + '-' + dd + '/' + hr + '-' + min + '-' + sec + dT + '_' + x
   );
+}
+export function ide() {
+  var today = new Date();
+  var dd = String(today.getDate()).padStart(2, '0');
+  var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+  var yyyy = today.getFullYear();
+  return yyyy + '-' + mm + '-' + dd;
 }
 export function currentTime() {
   var today = new Date();
