@@ -8,7 +8,7 @@
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint .",
-    "adb": "adb reverse tcp:8081 tcp:8081"
+    "adb": "adb reverse tcp:8081 tcp:8081 && scrcpy"
   },
   "dependencies": {
     "@react-native-firebase/app": "^10.4.0",

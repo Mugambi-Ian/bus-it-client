@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import {PulseIndicator} from 'react-native-indicators';
+import {roundToNearestPixel} from 'react-native/Libraries/Utilities/PixelRatio';
 import {
   fadeIn,
   slideInDown,
@@ -67,6 +68,15 @@ const style = StyleSheet.create({
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     backgroundColor: '#fff',
+  },
+  tripCard: {
+    backgroundColor: '#fff',
+    elevation: 2,
+    borderRadius: 10,
+    marginRight: 10,
+    marginLeft: 10,
+    marginTop: 10,
+    flexDirection: 'row',
   },
   navItemIcon: {
     height: 25,
@@ -152,7 +162,36 @@ export default class Home extends Component {
 class LandingPage extends Component {
   state = {
     currentscreen: 'home',
+    routes: [],
   };
+  componentDidMount() {
+    this.bc = BackHandler.addEventListener('hardwareBackPress', async () => {
+      if (this.state.openRoute) {
+        this.setState({
+          openRoute: undefined,
+          currentscreen: 'home',
+          navOff: undefined,
+        });
+        return true;
+      } else {
+        BackHandler.exitApp();
+        return true;
+      }
+    });
+    this.db = _database.ref();
+    this.db.child('routes/').on('value', (x) => {
+      const z_ = [];
+      x.forEach((d) => {
+        const t_ = [];
+        d.child('trips').forEach((o) => {
+          t_.push(o.val());
+        });
+        const {routeName, routeId} = d.val();
+        z_.push({trips: t_, routeName, routeId});
+      });
+      this.setState({trips: z_});
+    });
+  }
 
   render() {
     return (
@@ -162,15 +201,189 @@ class LandingPage extends Component {
         <StatusBar barStyle="dark-content" backgroundColor="#fff" />
         {this.state.currentscreen === 'home' ? (
           <Animatable.View animation={slideInDownLess}>
+            <Text
+              style={{
+                fontFamily: 'Quicksand-Regular',
+                marginLeft: 20,
+                marginRight: 20,
+                marginTop: 20,
+                fontSize: 28,
+                color: '#43bf28',
+                marginBottom: 10,
+              }}>
+              Availabe Routes
+            </Text>
+            {this.state.routes.map((d, i) => {
+              return (
+                <TouchableOpacity
+                  key={i}
+                  style={style.tripCard}
+                  onPress={() => {
+                    this.setState({
+                      openRoute: d,
+                      currentscreen: 'route',
+                      navOff: 'kd',
+                    });
+                  }}>
+                  <Image
+                    source={require('../../assets/drawable/placeholder.png')}
+                    style={{
+                      width: 33,
+                      height: 30,
+                      margin: 20,
+                      alignSelf: 'center',
+                    }}
+                  />
+                  <Text
+                    style={{
+                      fontFamily: 'Quicksand-SemiBold',
+                      marginLeft: 20,
+                      padding: 10,
+                      borderRadius: 10,
+                      borderColor: 10,
+                      fontSize: 23,
+                      color: '#43bf28',
+                      alignSelf: 'center',
+                    }}>
+                    d.routeName
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
             <TouchableOpacity
-              style={{alignSelf: 'flex-end'}}
+              style={{alignSelf: 'flex-end', position: 'absolute'}}
               onPress={async () => {
                 this.props.updateInfo();
               }}>
               <Image
                 source={require('../../assets/drawable/icon-profile.png')}
+                style={{width: 40, height: 40, margin: 15, right: 50}}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{alignSelf: 'flex-end', position: 'absolute'}}
+              onPress={async () => {
+                _auth.signOut().then(() => {
+                  this.props.openTimedSnack('Signed out');
+                  this.props.unauthorizeUser();
+                });
+              }}>
+              <Image
+                source={require('../../assets/drawable/icon-logout.png')}
                 style={{width: 40, height: 40, margin: 15}}
               />
+            </TouchableOpacity>
+          </Animatable.View>
+        ) : this.state.currentscreen === 'route' ? (
+          <Animatable.View animation={fadeIn}>
+            <Text
+              style={{
+                fontFamily: 'Quicksand-Regular',
+                marginLeft: 20,
+                marginRight: 20,
+                marginTop: 20,
+                fontSize: 28,
+                color: '#43bf28',
+                marginBottom: 10,
+              }}>
+              Schedule Trip
+            </Text>
+            <TouchableOpacity
+              style={{...style.tripCard, flexDirection: 'column'}}>
+              <Image
+                source={require('../../assets/drawable/logo.png')}
+                style={{
+                  width: 50,
+                  height: 50,
+                  alignSelf: 'center',
+                  marginTop: 20,
+                }}
+              />
+              <Text
+                style={{
+                  fontFamily: 'Quicksand-SemiBold',
+                  marginLeft: 20,
+                  padding: 10,
+                  borderRadius: 10,
+                  borderColor: 10,
+                  fontSize: 23,
+                  color: '#999999',
+                  alignSelf: 'center',
+                }}>
+                Depature Time : 8:30 am
+              </Text>
+              <View style={{backgroundColor: '#000', height: 1, margin: 5}} />
+              <Text
+                style={{
+                  fontFamily: 'Quicksand-Regular',
+                  marginLeft: 20,
+                  padding: 10,
+                  borderRadius: 10,
+                  borderColor: 10,
+                  fontSize: 23,
+                  color: '#999999',
+                  alignSelf: 'center',
+                }}>
+                Availabe Seats {3}
+              </Text>
+              <Text
+                style={{
+                  fontFamily: 'Quicksand-Regular',
+                  marginLeft: 20,
+                  padding: 10,
+                  borderRadius: 10,
+                  borderColor: 10,
+                  fontSize: 23,
+                  color: '#999999',
+                  alignSelf: 'center',
+                }}>
+                Ticket Price: 300 Kes
+              </Text>
+            </TouchableOpacity>
+          </Animatable.View>
+        ) : this.state.currentscreen === 'book' ? (
+          <Animatable.View animation={slideInDownLess}>
+            <Text
+              style={{
+                fontFamily: 'Quicksand-Regular',
+                marginLeft: 20,
+                marginRight: 20,
+                marginTop: 20,
+                fontSize: 28,
+                color: '#43bf28',
+                marginBottom: 10,
+              }}>
+              Schedule Trip
+            </Text>
+            <TouchableOpacity
+              style={{...style.tripCard, flexDirection: 'column'}}>
+              <Text
+                style={{
+                  fontFamily: 'Quicksand-SemiBold',
+                  marginLeft: 20,
+                  padding: 10,
+                  borderRadius: 10,
+                  borderColor: 10,
+                  fontSize: 23,
+                  color: '#999999',
+                  alignSelf: 'center',
+                }}>
+                Depature Time : 8:30 am
+              </Text>
+              <View style={{backgroundColor: '#000', height: 1, margin: 5}} />
+              <Text
+                style={{
+                  fontFamily: 'Quicksand-Regular',
+                  marginLeft: 20,
+                  padding: 10,
+                  borderRadius: 10,
+                  borderColor: 10,
+                  fontSize: 23,
+                  color: '#999999',
+                  alignSelf: 'center',
+                }}>
+                Availabe Seats {3}
+              </Text>
             </TouchableOpacity>
           </Animatable.View>
         ) : (
